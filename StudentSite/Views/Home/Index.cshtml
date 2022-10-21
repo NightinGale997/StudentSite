@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Главная";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Добро пожаловать!</h1>
+    <p>Этот сайт был сделан для группы ПМИб-221!</p>
+    <div id = "home-index-cards">
+        <div class="card text-white bg-info mb-3" style="max-width: 20rem;">
+        <div class="card-body">
+            <h4 class="card-title">Посмотрите на нас!</h4>
+            <p class="card-text">Вы можете узнать больше о руководителях группы и о нас самих!</p>
+        </div>
+        <div class="card-header">
+            <a asp-area="" asp-controller="Home" asp-action="Privacy" class="btn btn-dark">Открыть информацию</a>
+        </div>
+        </div>
+        <div class="card text-white bg-info mb-3" style="max-width: 20rem;">
+            <div class="card-body">
+                <h4 class="card-title">Домашние задания!</h4>
+                <p class="card-text">
+                    Запишите или посмотрите домашнее задание по предметам!
+                </p>
+            </div>
+            <div class="card-header">
+                <a asp-area="" asp-controller="Homework" asp-action="Index" class="btn btn-dark">Открыть список ДЗ</a>
+            </div>
+        </div>
+        <div class="card text-white bg-info mb-3" style="max-width: 20rem;">
+            <div class="card-body">
+                <h4 class="card-title">Важные учебные материалы!</h4>
+                <p class="card-text">
+                    Если вы ищете какой-то файл для домашней работы, то тут вы его найдёте!
+                </p>
+            </div>
+            <div class="card-header">
+                <a asp-area="" asp-controller="StudyMaterials" asp-action="Index" class="btn btn-dark">Открыть файлы</a>
+            </div>
+        </div>
+    </div>
+</div>

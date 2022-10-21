@@ -1,0 +1,284 @@
+﻿@model HomeworkData
+@using System.Globalization;
+
+@{
+    ViewData["Title"] = "Домашние работы";
+}
+
+<div class="text-center" id="homework-main">
+    <h1 class="display-4">Домашка!</h1>
+    <h2 class="display-6 m-4 mb-0">Расписание</h2>
+    <div class="" id="filters">
+        <div id="week-and-semester-filters">
+            <div class="h-25" id="selectSemester">
+        <label for="exampleSelect1" class="form-label mt-4">Семестр</label>
+        <select class="form-select" id="exampleSelect1" onchange="SaveItems()">
+                @foreach(var s in Model.Semesters)
+                {
+                    if (s.SemesterNumber == Model.CurrentSemester)
+                    {
+                        <option class="opt" id="opt_@s.SemesterNumber" selected>@s.SemesterNumber</option>
+                    }
+                    else
+                    {
+                        <option class="opt" id="opt_@s.SemesterNumber">@s.SemesterNumber</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="" id="selectWeek">
+        <label for="exampleSelect2" class="form-label mt-4">Неделя</label>
+        <select class="form-select" id="exampleSelect2" onchange="SaveItems()">
+                @for (int i = 1; i <= Model.CurrentAmountOfWeeks; i++)
+                {
+                    if (i == Model.CurrentWeek)
+                    {
+                        <option class="opt" id="opt2_@i" selected>@i (@Model.Semesters[Model.CurrentSemester - 1].DateStart.AddDays((i-1)*7).ToShortDateString() — @Model.Semesters[Model.CurrentSemester - 1].DateStart.AddDays(i*7 - 1).ToShortDateString())</option>
+                    }
+                    else
+                    {
+                        <option class="opt" id="opt2_@i">@i (@Model.Semesters[Model.CurrentSemester - 1].DateStart.AddDays((i-1)*7).ToShortDateString() — @Model.Semesters[Model.CurrentSemester - 1].DateStart.AddDays(i*7 - 1).ToShortDateString())</option>
+                    }
+                }
+        </select>
+        </div>
+        </div>
+        <div class="mb-4" id="week-parity">
+            @if (Model.CurrentParity == 1)
+            {
+                <p class="">Знаменатель</p>
+            }
+            else
+            {
+                <p class="">Числитель</p>
+            }
+        </div>
+    </div>
+    <div id="day-cards-main">
+        @for(int i = 0; i < 2; i++)
+        {
+        <div class="d-flex flex-column" id="day-cards-half-@(i+1)">
+        @for(int k = 0; k < 3; k++)
+        {
+        <div class="card mb-3 day-card">
+                    @{
+                    var j = k + i*3;
+                    var date = Model.Semesters[Model.CurrentSemester - 1].DateStart.AddDays(7*(Model.CurrentWeek - 1)+j);
+                    var dOW = date.DayOfWeek;
+                    string dayOfWeek;
+                    switch (dOW)
+                    {
+                        case DayOfWeek.Monday: dayOfWeek = "Понедельник"; break;
+                        case DayOfWeek.Tuesday: dayOfWeek = "Вторник"; break;
+                        case DayOfWeek.Wednesday: dayOfWeek = "Среда"; break;
+                        case DayOfWeek.Thursday: dayOfWeek = "Четверг"; break;
+                        case DayOfWeek.Friday: dayOfWeek = "Пятница"; break;
+                        case DayOfWeek.Saturday: dayOfWeek = "Суббота"; break;
+                        default: dayOfWeek = "Ошибка"; break;
+                    }
+                    <div class="card-header">@date.ToShortDateString()</div>
+                    <div class="card-body p-1">
+                    <h4 class="card-title">@dayOfWeek</h4>
+                    <table class="table text-white homework-day-table">
+                    <thead>
+                        <tr class="homework-table-text">
+                        <th width="30px" class="materials-index-table-col homework-day-table-col" scope="col">№</th>
+                        <th class="materials-index-table-col homework-day-table-col homework-day-table-head-col" scope="col" align="left">Название</th>
+                        <th class="materials-index-table-col homework-day-table-head-col" scope="row">Домашнее задание</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var day = Model.Semesters[Model.CurrentSemester - 1].DateStart.AddDays(7 * (Model.CurrentWeek - 1)+j);
+                            var classes = (Model.CurrentParity == 0 ? Model.Sch[Model.CurrentSemester - 1].Numerator[j].Classes.Split(';') : Model.Sch[Model.CurrentSemester - 1].Denominator[j].Classes.Split(';'));
+                            var homework = Model.Homeworks.FindAll(x => x.Date == day);
+                            j = 1;
+              
+                            @foreach(var s in classes)
+                            {
+                                Homework neededHw;
+                                @if (s.Contains("/?Разделение на группы")) {
+                                    neededHw = homework?.Find(x => x.Class == s.Remove(s.IndexOf("/?Разделение на группы")));
+                                }
+                                else {
+                                    neededHw = homework?.Find(x => x.Class == s);
+                                }
+                                @if(neededHw != null)
+                                    neededHw.Value = neededHw.Value.Length >= 20 ? neededHw.Value.Remove(19) + "...": neededHw.Value;
+                                var homeworkString = homework != null && neededHw != null ? $"{neededHw.Id}/../{neededHw.Date.ToShortDateString()}/../{neededHw.Value}" : $"/../{day.ToShortDateString()}/../{s}";
+                                <tr class="homework-table-text">
+                                    <td width="" class="homework-day-table-col">@j</td>
+                                    @if (s.Contains("/?Разделение на группы")) {
+                                    <th class="materials-index-table-col homework-day-table-col" scope="row">@s.Replace("/?Разделение на группы", "")</th>
+                                    } else {
+                                    <th class="materials-index-table-col homework-day-table-col" scope="row">@s</th>
+                                    }
+                                    @if (homework != null && neededHw != null && neededHw.value != "")
+                                    {
+                                        <th class="materials-index-table-col homework-day-table-col" scope="row">
+                                        <div class="d-flex justify-content-between">
+                                        <p class="homework-value">@neededHw.Value</p>
+                                        <div class="d-flex">
+                                        <button type="button" class="btn btn-outline-info p-2 m-1 btn-homework" onclick="openModal({ url: '/Homework/GetHomework', data: '@homeworkString.Replace("\r", "|").Replace("\n", "|")' })" data-toggle="ajax-modal" data-target="Modal">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                        </svg>
+                                        </button>
+                                        @if(User.Identity != null && (User.IsInRole("Moderator") || User.IsInRole("Administrator")) && (DateTime.Now <= day.AddDays(1) || User.IsInRole("Administrator")))
+                                                {
+                                                <button type="button" class="btn btn-outline-warning p-2 m-1 btn-homework" onclick="openModal({ url: '/Homework/EditHomework', data: '@homeworkString.Replace("\r\n", "|")'})" data-toggle="ajax-modal" data-target="Modal">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                                </svg>
+                                                </button>
+                                                }
+                                        </div>
+                                        </div>
+                                        </th>
+                                    }
+                                    else
+                                    {
+                                        <th class="materials-index-table-col homework-day-table-col" scope="row">
+                                        <div class="d-flex justify-content-between">
+                                        <p class="homework-value"></p>
+                                        <div></div>
+                                                @if(User.Identity != null && (User.IsInRole("Moderator") || User.IsInRole("Administrator")) && (DateTime.Now <= day.AddDays(1) || User.IsInRole("Administrator")) && s.Length > 0)
+                                                {
+                                                <button type="button" class="btn btn-outline-warning p-2 m-1 btn-homework"  onclick="openModal({ url: '/Homework/EditHomework', data:  '@homeworkString'})" data-toggle="ajax-modal" data-target="Modal">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                                </svg>
+                                                </button>
+                                                }
+                                        </div>
+                                        </th>
+                                    }
+                                </tr>
+                                j++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            }
+        </div>
+}
+</div>
+}
+    </div>
+</div>
+<script>
+    var ItemIdArray = [];
+    var ItemsIdsCommaSeparated = "";
+    function getCategory() {
+        $("#filters option[class=opt]").each(function (index, val) {
+            var Id = $(val).attr("id");
+            var isselected = $("#" + Id).is(":selected", true);
+            if (isselected) {
+                var array = Id.split("_");
+                var ItemId = array[1];
+                ItemIdArray.push(ItemId);
+            }
+            ItemsIdsCommaSeparated = ItemIdArray.toString();
+        })
+        return ItemsIdsCommaSeparated;
+    }
+</script>
+
+<script>
+    var SaveItems = function () {
+        getCategory();
+
+            $.ajax({
+                type: 'post',
+                url:'@Url.Action("Index", "Homework")',
+                data: {
+                    ItemIds: ItemsIdsCommaSeparated
+                }
+            })
+                .done(function (response) {
+                    $("#homework-main").html(response);
+                })
+                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log("fail");
+                    alert("FAIL");
+                })
+                .always(function () {
+                    console.log("always");
+                });
+            console.log("getdata out");
+    }
+</script>
+@section Scripts{
+<script>
+       let modal = $('#modal'); 
+       
+       $('#saveBtn').on('click', function () {
+           const model = {
+              class: $('input#Class').val(),
+              value: $('input#Value').val(),
+              date: $('input#Date').val()
+          };
+           
+           $.ajax({
+               url: '@Url.Action("EditHomework")',
+               type: 'POST',
+               data: JSON.stringify(model),
+               success: function (response) {
+                   Swal.fire({
+                       title: 'Информация',
+                       text: response.description,
+                       icon: 'success',
+                       confirmButtonText: 'Окей'
+                   })
+               },
+               error: function (data) {
+                   Swal.fire({
+                       title: 'Информация',
+                       text: 'Ошибка валидации',
+                       icon: 'error',
+                       confirmButtonText: 'Окей'
+                   })
+               }
+           }) 
+        });
+        
+       $('#compareBtnId').on('click', function (){
+           $.ajax({
+               type: 'GET',
+               url : '@Url.Action("Compare")',
+               success: function (response) {
+                   $('.modal-dialog').addClass("modal-lg");
+                   modal.find(".modal-body").html(response);
+                   modal.modal('show')
+               }
+           });
+       });
+        
+       $(".btn-close").click(function(){
+            modal.modal('hide');
+       });
+       
+       $('#addCarId').on('click', function () {
+           $.ajax({
+              type: 'GET',
+              url : '/Car/Save',
+              success: function (response) {
+                  $('.modal-dialog').removeClass("modal-lg");
+                  modal.find(".modal-body").html(response);
+                  modal.modal('show')
+              },
+              failure: function () {
+                modal.modal('hide')
+              },
+              error: function (response) {
+                  alert(response.responseText);
+              }
+          });
+       });
+       
+    </script>
+}
+    

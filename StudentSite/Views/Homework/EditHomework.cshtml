@@ -1,0 +1,49 @@
+﻿@model StudentSite.Models.Homework
+@*data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())*@
+@{
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">Информация</h5>
+</div>
+<form method="post" class="modal-window" asp-action="EditHomework" asp-controller="Homework">
+<div class="modal-body">
+    
+            <div class="modal-window">
+                <label asp-for="@Model.Class" class="col-form-label w-100">Пара</label>
+            @if (Model.Class.Contains("/?Разделение на группы"))
+            {
+                int i = Model.Class.IndexOf("/?Разделение на группы");
+                <input type="text" class="form-control" asp-for="@Model.Class" value="@Model.Class.Remove(i)" readonly>
+            }
+            else
+            {
+                <input type="text" class="form-control" asp-for="@Model.Class" readonly>
+            }
+            </div>
+            <div class="modal-window">
+                <label asp-for="@Model.Value" class="col-form-label">Домашнее задание</label>
+            @if(Model.Class.Contains("/?Разделение на группы"))
+            {
+                string s = "";
+
+                <textarea class="form-control w-100" rows="6" asp-for="@Model.Value"></textarea>
+            }
+            else
+            {
+                <textarea class="form-control w-100" rows="6" asp-for="@Model.Value"></textarea>
+            }
+            </div>
+            <div class="modal-window">
+                <label asp-for="@Model.Date" class="col-form-label">Дата</label>
+                <input asp-for="@Model.Date" type="text" class="form-control w-100" value="@Model.Date.ToShortDateString()" readonly/>
+            </div>
+</div>
+<div class="modal-footer d-flex justify-content-between">
+    @if ( User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <button class="btn btn-primary" id="saveBtn">Сохранить</button> 
+    }
+    <button type="button" class="btn btn-close btn-secondary" data-bs-dismiss="modal"></button>
+</div>
+</form>

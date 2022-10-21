@@ -1,0 +1,229 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+#home-index-cards {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 30px;
+    margin: 30px 0 0 0;
+}
+
+.materials-index-table-col {
+    text-align: left;
+}
+
+#study-materials-table {
+    width: 80%;
+    margin: 40px auto;
+}
+
+.privacy-avatar {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 100%;
+}
+@media only screen and (max-width: 600px) {
+    .privacy-avatar {
+        width: 125px;
+        height: 125px;
+        object-fit: cover;
+        border-radius: 100%;
+        margin: 0;
+    }
+    .privacy-info {
+        margin: 0px 0px;
+        font-size: 5px;
+    }
+    .privacy-info-header {
+        font-size: 15px;
+    }
+    .privacy-info-desc {
+        font-size: 15px;
+    }
+    .vk-btn {
+        margin: 0;
+    }
+}
+#vanya {
+    object-position: 75%;
+}
+#danya {
+    object-position: 50% 10%;
+}
+.privacy-info {
+    margin: 25px 40px;
+}
+.privacy-card {
+    opacity: 0%;
+}
+#vanya-card {
+    animation: 0.5s ease-out 75ms 1 slideInFromLeft forwards;
+}
+#dima-card {
+    animation: 0.5s ease-out 150ms 1 slideInFromLeft forwards;
+}
+#maks-card {
+    animation: 0.5s ease-out 225ms 1 slideInFromLeft forwards;
+}
+#danya-card {
+    animation: 0.5s ease-out 300ms 1 slideInFromLeft forwards;
+}
+#group-card {
+    animation: 0.5s ease-out 375ms 1 slideInFromLeft forwards;
+}
+#privacy-main {
+    margin: 40px;
+}
+.vk-btn {
+    margin: 25px 0 25px 0;
+}
+.day-card {
+    width: 600px;
+    height: 450px;
+    font-size: 13px;
+    margin: 10px;
+    background-color: #B5C689;
+    color: #F0DDDA;
+    text-shadow: 0px 0px 1px #BDA18C;
+}
+.day-card, .homework-table-text {
+    color: #ffffff;
+    text-shadow: 0px 0px 1px #A49DC7;
+}
+
+#invisible-block {
+    width: 22%;
+}
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0%;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 100%;
+    }
+}
+.homework-day-table {
+    border: 5px solid rgba(158, 173, 120, 0.5);
+    table-layout: fixed;
+    width: 100%;
+}
+#week-and-semester-filters {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 35px;
+}
+#selectSemester {
+    margin: 0px 75px;
+    width: 20%;
+}
+@media only screen and (max-width: 1100px) {
+    .homework-day-table {
+        border: 5px solid rgba(158, 173, 120, 0.5);
+        table-layout: fixed;
+        width: 100%;
+    }
+    #week-and-semester-filters {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #selectSemester {
+        margin: 25px;
+        width: 100%;
+    }
+}
+.homework-day-table-col {
+    border: 5px solid rgba(158, 173, 120, 0.5);
+}
+.login-form {
+    width: 400px;
+}
+#login-form-login, #login-form-password, #login-form-btn {
+    margin: 35px auto;
+    width: 400px;
+}
+.homework-value {
+    margin: 2px 5px 2px 1px;
+}
+
+#modal-window {
+    width: 300px;
+}
+@media only screen and (max-width: 1100px) {
+    #home-index-cards {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+        width: auto;
+    }
+}
+#day-cards-main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: auto;
+}
+@media only screen and (max-width: 1000px) {
+    #day-cards-main {
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        width: auto;
+        height: auto;
+        margin: auto;
+    }
+    .day-card {
+        height: auto;
+        width: auto;
+    }
+}
+#selectWeek {
+    width: 325px;
+}
+#week-parity {
+    font-size: 28px;
+    margin-top: 0px;
+}
+#filters {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#homework-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: auto;
+    height: auto;
+}
+.btn-homework {
+    height: 40px;
+    width: 40px;
+}

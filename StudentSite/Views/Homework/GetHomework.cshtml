@@ -1,0 +1,26 @@
+﻿@model StudentSite.Models.Homework
+@*data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())*@
+
+<div class="modal-header">
+    <h5 class="modal-title">Информация</h5>
+</div>
+<div class="modal-body">
+    <div class="modal-window">
+            <div class="modal-window">
+                <label asp-for="@Model.Class" class="col-form-label w-100">Пара</label>
+                <input type="text" class="form-control" asp-for="@Model.Class" disabled>
+            </div>
+            <div class="modal-window">
+                <label asp-for="@Model.Value" class="col-form-label">Домашнее задание</label>
+                @*<input class="form-control" asp-for="@Model.Value"/>*@
+                <textarea class="form-control w-100" id="exampleTextarea" rows="6" disabled>@Model.Value</textarea>
+            </div>
+            <div class="modal-window">
+                <label asp-for="@Model.Date" class="col-form-label">Дата</label>
+                <input type="text" class="form-control w-100" disabled value="@Model.Date.ToShortDateString()"/>
+            </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-close btn-secondary" data-bs-dismiss="modal"></button>
+</div>

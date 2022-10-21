@@ -1,0 +1,85 @@
+﻿@model List<StudyMaterial>[]
+@{
+    ViewData["Title"] = "Учебные материалы";
+}  
+
+<div class="text-center" id="study-materials-main">
+    <h1 class="display-4">Здесь есть множество полезного!</h1>
+    <h2 class="display-6 m-4">Материалы</h2>
+    <div class="text-center" id="study-materials-table-filters">
+                <div id="categoryArea" class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+        @foreach(var obj in (from sm in Model[0] select sm.Category).ToList<String>().Distinct<String>())
+         {
+            <input @((from sm in Model[1] select sm.Category).ToList<String>().Contains(obj) ? "checked" : "")
+                type="checkbox" class="btn-check" value="@obj.Replace(' ', '-')" id="btn_@obj.Replace(' ', '-')"
+                autocomplete="off" onclick="SaveItems()">
+            <label class="btn btn-primary" for="btn_@obj.Replace(' ', '-')">@obj</label>
+         }
+        </div>
+          <table id="study-materials-table" class="table table-hover">
+          <thead>
+            <tr>
+              <th class="materials-index-table-col display-6" scope="col" align="left"></th>
+              <th width="10%" class="materials-index-table-col" scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach(var obj in Model[1])
+            {
+                <tr>
+                <th class="materials-index-table-col" scope="row">@obj.Name</th>
+                @if(User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                <td width="10%" class=""><a class="btn btn-info" href="@obj.Reference" target="_blank">Просмотреть</a></td>
+                }
+                </tr>       
+            }
+          </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    var ItemIdArray = [];
+    var ItemsIdsCommaSeparated = "";
+    function getCategory() {
+
+        $("#categoryArea input[type=checkbox]").each(function (index, val) {
+            var Id = $(val).attr("id");
+            var ischecked = $("#" + Id).is(":checked", true);
+            if (ischecked) {
+                var array = Id.split("_");
+                var ItemId = array[1];
+                ItemIdArray.push(ItemId);
+            }
+            ItemsIdsCommaSeparated = ItemIdArray.toString();
+
+        })
+        return ItemsIdsCommaSeparated;
+    }
+</script>
+
+<script>
+    var SaveItems = function () {
+        getCategory();
+
+            $.ajax({
+                type: 'post',
+                url:'@Url.Action("Index", "StudyMaterials")',
+                data: {
+                    ItemIds: ItemsIdsCommaSeparated
+                }
+            })
+                .done(function (response) {
+                    $("#study-materials-main").html(response);
+                })
+                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log("fail");
+                    alert("FAIL");
+                })
+                .always(function () {
+                    console.log("always");
+                });
+            console.log("getdata out");
+    }
+</script>

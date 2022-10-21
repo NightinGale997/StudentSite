@@ -1,0 +1,37 @@
+﻿@using System.Text.RegularExpressions
+@using StudentSite.Enum
+@model StudentSite.Data.ApplicationDbContext;
+@{
+    ViewData["Title"] = "Профиль";
+}
+
+<div>
+    @{
+        var user = Model.Users.ToList().Find(x => x.Name == User.Identity?.Name);
+        string name = user.Name;
+        string[] words = Regex.Matches(name, "(^[a-z]+|[A-Z]+(?![a-z])|[A-Z][a-z]+)")
+        .OfType<Match>()
+        .Select(m => m.Value)
+        .ToArray();
+        string result = string.Join(" ", words);
+        int allPoints = 0;
+        int allPointsMonth = 0;
+        foreach (var op in Model.PointOperations.ToList().FindAll(x => x.UserId == user.Id))
+        {
+            int value = op.OperationType == PointOperationType.Get ? op.PointAmount : op.OperationType == PointOperationType.Lost ? -(op.PointAmount) : 0;
+            allPoints += value;
+            allPointsMonth += op.Date.Month == DateTime.Now.Month && op.Date.Year == DateTime.Now.Year ? value : 0;
+        }
+    }
+    <h1>Профиль (id: @user.Id)</h1>
+    <div class="m-4">
+        <h3 class="m-3">Имя: @result</h3>
+        <h3 class="m-3">Количество очков всего: @allPoints</h3>
+        <h3 class="m-3">Количество очков в этом месяце: @allPointsMonth</h3>
+        <div class="m-3">
+            <form method="post" asp-controller="Profile" asp-action="Logout">
+                <input class="btn btn-danger" type="submit" value="Выйти" />
+                </form>
+        </div>
+    </div>
+</div>
