@@ -13,4 +13,9 @@ namespace StudentSite.Models
         [Required]
         public string Reference { get; set; }
     }
+    public class StudyMaterialData
+    {
+        public List<StudyMaterial> StudyMaterials { get; set; }
+        public string SelectedCategory { get; set; }
+    }
 }

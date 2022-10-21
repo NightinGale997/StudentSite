@@ -1,16 +1,16 @@
-﻿@model List<StudyMaterial>[]
+﻿@model StudyMaterialData
 @{
     ViewData["Title"] = "Учебные материалы";
 }  
 
-<div class="text-center" id="study-materials-main">
+@*<div class="text-center" id="study-materials-main">
     <h1 class="display-4">Здесь есть множество полезного!</h1>
     <h2 class="display-6 m-4">Материалы</h2>
     <div class="text-center" id="study-materials-table-filters">
-                <div id="categoryArea" class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+        <div id="categoryArea" class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
         @foreach(var obj in (from sm in Model[0] select sm.Category).ToList<String>().Distinct<String>())
          {
-            <input @((from sm in Model[1] select sm.Category).ToList<String>().Contains(obj) ? "checked" : "")
+            <input @((from sm in Model[1] select sm.Category).ToList<String>().Contains(obj) ? "selected" : "")
                 type="checkbox" class="btn-check" value="@obj.Replace(' ', '-')" id="btn_@obj.Replace(' ', '-')"
                 autocomplete="off" onclick="SaveItems()">
             <label class="btn btn-primary" for="btn_@obj.Replace(' ', '-')">@obj</label>
@@ -37,23 +37,67 @@
           </tbody>
         </table>
     </div>
+</div>*@
+
+
+
+<div class="text-center" id="study-materials-main">
+    <h1 class="display-4">Здесь есть множество полезного!</h1>
+    <h2 class="display-6 m-4">Материалы</h2>
+    <div class="text-center" id="study-materials-table-filters">
+        <div id="categoryArea" class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+        <select class="form-select" id="exampleSelect1" onchange="SaveItems()">
+                @foreach(var s in (from sm in Model.StudyMaterials select sm.Category).ToList<String>().Distinct<String>())
+                {
+                    if(s == Model.SelectedCategory)
+                    {
+                        <option class="opt" id="opt_@s.Replace(" ", "-")" selected>@s</option>
+                    }
+                    else
+                    {
+                        <option class="opt" id="opt_@s.Replace(" ", "-")">@s</option>
+                    }
+                }
+            </select>
+        </div>
+          <table id="study-materials-table" class="table table-hover">
+          <thead>
+            <tr>
+              <th class="materials-index-table-col display-6" scope="col" align="left"></th>
+              <th width="10%" class="materials-index-table-col" scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+                @foreach(var obj in Model.StudyMaterials.FindAll(x => x.Category == Model.SelectedCategory))
+                {
+                <tr>
+                <th class="materials-index-table-col" scope="row">@obj.Name</th>
+                @if(User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                <td width="10%" class=""><a class="btn btn-info" href="@obj.Reference" target="_blank">Просмотреть</a></td>
+                }
+                </tr>       
+            }
+          </tbody>
+        </table>
+    </div>
 </div>
+
+
 
 <script>
     var ItemIdArray = [];
     var ItemsIdsCommaSeparated = "";
     function getCategory() {
-
-        $("#categoryArea input[type=checkbox]").each(function (index, val) {
+        $("#categoryArea option[class=opt]").each(function (index, val) {
             var Id = $(val).attr("id");
-            var ischecked = $("#" + Id).is(":checked", true);
-            if (ischecked) {
+            var isselected = $("#" + Id).is(":selected", true);
+            if (isselected) {
                 var array = Id.split("_");
                 var ItemId = array[1];
                 ItemIdArray.push(ItemId);
             }
             ItemsIdsCommaSeparated = ItemIdArray.toString();
-
         })
         return ItemsIdsCommaSeparated;
     }

@@ -158,11 +158,12 @@ body {
 .homework-day-table-col {
     border: 5px solid rgba(158, 173, 120, 0.5);
 }
-.login-form {
-    width: 400px;
-}
 #login-form-login, #login-form-password, #login-form-btn {
     margin: 35px auto;
+    width: 400px;
+}
+#login-form {
+    margin: auto;
     width: 400px;
 }
 .homework-value {
