@@ -1,4 +1,4 @@
-﻿@model StudentSite.Models.Homework
+﻿@model StudentSite.Models.HomeworkWithFiles
 @*data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())*@
 
 <div class="modal-header">
@@ -19,6 +19,23 @@
                 <label asp-for="@Model.Date" class="col-form-label">Дата</label>
                 <input type="text" class="form-control w-100" disabled value="@Model.Date.ToShortDateString()"/>
             </div>
+        @if (Model.FilesInDb != null && Model.FilesInDb.Count > 0)
+        {
+                        <div class="modal-window m-4 d-flex flex-column justify-content-around align-items-start">
+                <label asp-for="@Model.FilesInDb" class="col-form-label">Изображения</label>
+                @foreach(var f in Model.FilesInDb)
+                {
+                    <div class="m-2">
+                        <img class="rounded-5" width="225px" src="@Url.Content(f.Path)"/>
+                        <a class="btn btn-outline-info p-2 m-1 btn-homework" href="@Url.Content(f.Path)" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
     </div>
 </div>
 <div class="modal-footer">

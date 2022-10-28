@@ -1,0 +1,31 @@
+﻿@model StudentSite.Models.DayNote
+@*data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())*@
+@{
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">Информация</h5>
+</div>
+<form method="post" class="modal-window" asp-action="EditNote" asp-controller="Homework"  enctype="multipart/form-data">
+<div class="modal-body">
+    <div class="modal-window">
+
+            <div class="modal-window">
+                <label asp-for="@Model.Date" class="col-form-label">Дата</label>
+                <input asp-for="@Model.Date" type="text" class="form-control w-100" value="@Model.Date.ToShortDateString()" readonly/>
+            </div>
+
+            <div class="modal-window">
+                <label asp-for="@Model.Text" class="col-form-label">Заметка</label>
+                <textarea class="form-control w-100" rows="6" asp-for="@Model.Text"></textarea>
+            </div>
+    </div>
+</div>
+<div class="modal-footer d-flex justify-content-between">
+    @if ( User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <button class="btn btn-primary" id="saveBtn">Сохранить</button> 
+    }
+    <button type="button" class="btn btn-close btn-secondary" data-bs-dismiss="modal"></button>
+</div>
+</form>

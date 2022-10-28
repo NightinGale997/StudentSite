@@ -1,0 +1,22 @@
+﻿@model StudentSite.Models.DayNote
+@*data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())*@
+
+<div class="modal-header">
+    <h5 class="modal-title">Информация</h5>
+</div>
+<div class="modal-body">
+    <div class="modal-window">
+            <div class="modal-window">
+                <label asp-for="@Model.Date" class="col-form-label">Дата</label>
+                <input type="text" class="form-control w-100" disabled value="@Model.Date.ToShortDateString()"/>
+            </div>
+            <div class="modal-window">
+                <label asp-for="@Model.Text" class="col-form-label">Заметка</label>
+                @*<input class="form-control" asp-for="@Model.Value"/>*@
+                <textarea class="form-control w-100" id="exampleTextarea" rows="6" disabled>@Model.Text</textarea>
+            </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-close btn-secondary" data-bs-dismiss="modal"></button>
+</div>

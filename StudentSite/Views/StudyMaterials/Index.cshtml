@@ -1,4 +1,5 @@
 ﻿@model StudyMaterialData
+@using System.Collections.Generic
 @{
     ViewData["Title"] = "Учебные материалы";
 }  
@@ -47,7 +48,12 @@
     <div class="text-center" id="study-materials-table-filters">
         <div id="categoryArea" class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
         <select class="form-select" id="exampleSelect1" onchange="SaveItems()">
-                @foreach(var s in (from sm in Model.StudyMaterials select sm.Category).ToList<String>().Distinct<String>())
+                @{
+                    var materials = (from sm in Model.StudyMaterials select sm.Category).ToList<String>();
+                    materials.Sort();
+                    materials.Distinct<String>();
+                }
+                @foreach(var s in materials)
                 {
                     if(s == Model.SelectedCategory)
                     {

@@ -12,8 +12,8 @@ using StudentSite.Data;
 namespace StudentSite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221018214510_NewDb")]
-    partial class NewDb
+    [Migration("20221028210619_noteToDb")]
+    partial class noteToDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -124,12 +124,50 @@ namespace StudentSite.Migrations
                     b.Property<bool>("IsHoliday")
                         .HasColumnType("bit");
 
-                    b.Property<int>("SemesterNumber")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Days");
+                });
+
+            modelBuilder.Entity("StudentSite.Models.DayNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notes");
+                });
+
+            modelBuilder.Entity("StudentSite.Models.FileModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("StudentSite.Models.Homework", b =>
@@ -147,8 +185,9 @@ namespace StudentSite.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("SemesterNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("FileIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Value")
                         .IsRequired()

@@ -1,4 +1,4 @@
-﻿@model StudentSite.Models.Homework
+﻿@model StudentSite.Models.HomeworkWithFiles
 @*data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())*@
 @{
 }
@@ -6,9 +6,14 @@
 <div class="modal-header">
     <h5 class="modal-title">Информация</h5>
 </div>
-<form method="post" class="modal-window" asp-action="EditHomework" asp-controller="Homework">
+<form method="post" class="modal-window" asp-action="EditHomework" asp-controller="Homework"  enctype="multipart/form-data">
 <div class="modal-body">
-    
+    <div class="modal-window">
+
+            <div class="modal-window">
+                <label asp-for="@Model.Date" class="col-form-label">Дата</label>
+                <input asp-for="@Model.Date" type="text" class="form-control w-100" value="@Model.Date.ToShortDateString()" readonly/>
+            </div>
             <div class="modal-window">
                 <label asp-for="@Model.Class" class="col-form-label w-100">Пара</label>
             @if (Model.Class.Contains("/?Разделение на группы"))
@@ -35,9 +40,18 @@
             }
             </div>
             <div class="modal-window">
-                <label asp-for="@Model.Date" class="col-form-label">Дата</label>
-                <input asp-for="@Model.Date" type="text" class="form-control w-100" value="@Model.Date.ToShortDateString()" readonly/>
+              <label asp-for="@Model.Files" class="form-label mt-4">Добавить изображения</label>
+              <input asp-for="@Model.Files" class="form-control" type="file" id="formFile" multiple>
             </div>
+            @if(Model.FilesInDb != null && Model.FilesInDb.Count > 0)
+                {
+                <div class="d-flex flex-column">
+                  <label asp-for="@Model.ReplaceImg" class="form-label mt-4">Заменить уже прикреплённые?</label>
+                  <input asp-for="@Model.ReplaceImg" class="form-check-input" type="checkbox">
+                </div>
+                }
+            
+    </div>
 </div>
 <div class="modal-footer d-flex justify-content-between">
     @if ( User.Identity != null && User.Identity.IsAuthenticated)

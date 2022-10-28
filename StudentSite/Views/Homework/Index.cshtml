@@ -158,6 +158,58 @@
                                 </tr>
                                 j++;
                             }
+                            var note = Model.Notes.ToList().Find(x => x.Date == date);
+                            var noteString = note != null ?
+                                                        $"{note.Id}/../{note.Date.ToShortDateString()}/../{note.Text.Replace("\r\n", "|")}"
+                                                        : $"/../{day.ToShortDateString()}";
+                            @if((note != null && note.Text.Length > 0) || (User.IsInRole("Moderator") || User.IsInRole("Administrator"))){
+                                <tr class="homework-table-text-note">
+                                    <td width="" class="homework-day-table-col-note">@j</td>
+                                    <th class="materials-index-table-col homework-day-table-col-note" scope="row">Заметка</th>
+                                    @if (note != null)
+                                    {
+                                        <th class="materials-index-table-col homework-day-table-col-note" scope="row">
+                                        <div class="d-flex justify-content-between">
+                                        <p class="homework-value">@note.Text</p>
+                                        <div class="d-flex">
+                                        <button type="button" class="btn btn-outline-info p-2 m-1 btn-homework" onclick="openModalNote({ url: '/Homework/GetNote', data: '@noteString' })" data-toggle="ajax-modal" data-target="Modal">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                        </svg>
+                                        </button>
+                                        @if(User.Identity != null && (User.IsInRole("Moderator") || User.IsInRole("Administrator")) && (DateTime.Now <= day.AddDays(1) || User.IsInRole("Administrator")))
+                                                {
+                                                <button type="button" class="btn btn-outline-warning p-2 m-1 btn-homework" onclick="openModalNote({ url: '/Homework/EditNote', data: '@noteString'})" data-toggle="ajax-modal" data-target="Modal">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                                </svg>
+                                                </button>
+                                                }
+                                        </div>
+                                        </div>
+                                        </th>
+                                    }
+                                    else
+                                    {
+                                        <th class="materials-index-table-col homework-day-table-col-note" scope="row">
+                                        <div class="d-flex justify-content-between">
+                                        <p class="homework-value"></p>
+                                        <div></div>
+                                                @if(User.Identity != null && (User.IsInRole("Moderator") || User.IsInRole("Administrator")) && (DateTime.Now <= day.AddDays(1) || User.IsInRole("Administrator")))
+                                                {
+                                                <button type="button" class="btn btn-outline-warning p-2 m-1 btn-homework"  onclick="openModalNote({ url: '/Homework/EditNote', data: '@noteString'})" data-toggle="ajax-modal" data-target="Modal">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                                </svg>
+                                                </button>
+                                                }
+                                        </div>
+                                        </th>
+                                    }
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
@@ -216,11 +268,40 @@
        let modal = $('#modal'); 
        
        $('#saveBtn').on('click', function () {
-           const model = {
-              class: $('input#Class').val(),
-              value: $('input#Value').val(),
-              date: $('input#Date').val()
-          };
+           if($('input#Class').val() === undefined || $('input#Class').val() === null) {
+               const model = {
+                  text: $('input#Text').val(),
+                  date: $('input#Date').val()
+              };
+                         
+           $.ajax({
+               url: '@Url.Action("EditNote")',
+               type: 'POST',
+               data: JSON.stringify(model),
+               success: function (response) {
+                   Swal.fire({
+                       title: 'Информация',
+                       text: response.description,
+                       icon: 'success',
+                       confirmButtonText: 'Окей'
+                   })
+               },
+               error: function (data) {
+                   Swal.fire({
+                       title: 'Информация',
+                       text: 'Ошибка валидации',
+                       icon: 'error',
+                       confirmButtonText: 'Окей'
+                   })
+               }
+           }) 
+           }
+           else {
+               const model = {
+                  class: $('input#Class').val(),
+                  value: $('input#Value').val(),
+                  date: $('input#Date').val()
+              };
            
            $.ajax({
                url: '@Url.Action("EditHomework")',
@@ -243,6 +324,9 @@
                    })
                }
            }) 
+           }
+
+
         });
         
        $('#compareBtnId').on('click', function (){

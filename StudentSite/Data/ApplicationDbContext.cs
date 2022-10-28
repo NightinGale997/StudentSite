@@ -18,5 +18,7 @@ namespace StudentSite.Data
         public DbSet<User> Users { get; set; }
         public DbSet<PointOperation> PointOperations { get; set; }
         public DbSet<ChangeOperation> ChangeOperations { get; set; }
+        public DbSet<FileModel> Files { get; set; }
+        public DbSet<DayNote> Notes { get; set; }
     }
 }

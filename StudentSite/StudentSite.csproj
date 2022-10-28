@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Repositories\" />
-    <Folder Include="Migrations\" />
     <Folder Include="wwwroot\user-files\profile-pics\" />
     <Folder Include="wwwroot\user-files\study-materials\" />
     <Folder Include="wwwroot\user-files\homework-files\" />

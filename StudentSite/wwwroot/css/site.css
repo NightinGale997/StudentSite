@@ -105,9 +105,12 @@ body {
     color: #F0DDDA;
     text-shadow: 0px 0px 1px #BDA18C;
 }
-.day-card, .homework-table-text {
+.day-card, .homework-table-text, .homework-table-text-note {
     color: #ffffff;
     text-shadow: 0px 0px 1px #A49DC7;
+}
+.homework-table-text-note {
+    background-color: #f08984;
 }
 
 #invisible-block {
@@ -157,6 +160,9 @@ body {
 }
 .homework-day-table-col {
     border: 5px solid rgba(158, 173, 120, 0.5);
+}
+.homework-day-table-col-note {
+    border: 5px solid #ab605c;
 }
 #login-form-login, #login-form-password, #login-form-btn {
     margin: 35px auto;
@@ -228,3 +234,4 @@ body {
     height: 40px;
     width: 40px;
 }
+
