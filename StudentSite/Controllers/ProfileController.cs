@@ -48,6 +48,22 @@ namespace StudentSite.Controllers
         {
             return View(_db);
         }
+
+        [HttpPost]
+        public IActionResult ChangePassword(string newPassword)
+        {
+            if(newPassword != null && newPassword.Length > 0)
+            {
+                User user = _db.Users.ToList().Find(x => x.Name == User.Identity?.Name);
+                newPassword = Helpers.HashPasswordHelper.HashPassword(newPassword);
+                User newUser = new User { Id = user.Id, Name = user.Name, Password = newPassword, Role = user.Role };
+                _db.Remove(user);
+                _db.Add(newUser);
+                _db.SaveChanges();
+            }
+            return RedirectToAction("Account", "Profile");
+        }
+
         [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {

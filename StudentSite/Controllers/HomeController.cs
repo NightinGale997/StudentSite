@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StudentSite.Entities;
 using StudentSite.Models;
 using System.Diagnostics;
 
@@ -11,7 +12,7 @@ namespace StudentSite.Controllers
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            //Helpers.HashPasswordHelper.HashPassword("lmaoFuckYou");
+
         }
 
         public IActionResult Index()

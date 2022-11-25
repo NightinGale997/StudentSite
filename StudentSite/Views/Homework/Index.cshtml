@@ -54,15 +54,19 @@
             }
         </div>
     </div>
-    <div id="day-cards-main">
-        @for(int i = 0; i < 2; i++)
+    @if(User.Identity?.Name == null) {
+        <h1>Авторизуйтесь, чтобы просматривать этот контент.</h1>
+    }
+    <div id="day-cards-main" class="d-flex flex-column">
+        @for(int i = 0; i < 3; i++)
         {
-        <div class="d-flex flex-column" id="day-cards-half-@(i+1)">
-        @for(int k = 0; k < 3; k++)
+        <div class="" id="day-cards-half-@(i+1)">
+        @for(int k = 0; k < 2; k++)
         {
-        <div class="card mb-3 day-card">
+        string blur = User.Identity?.Name == null ? "card mb-3 day-card blurred" : "card mb-3 day-card";
+        <div class="@blur">
                     @{
-                    var j = k + i*3;
+                    var j = k + i*2;
                     var date = Model.Semesters[Model.CurrentSemester - 1].DateStart.AddDays(7*(Model.CurrentWeek - 1)+j);
                     var dOW = date.DayOfWeek;
                     string dayOfWeek;
@@ -113,7 +117,7 @@
                                     } else {
                                     <th class="materials-index-table-col homework-day-table-col" scope="row">@s</th>
                                     }
-                                    @if (homework != null && neededHw != null && neededHw.value != "")
+                                    @if (User.Identity != null && User.Identity.Name != null && homework != null && neededHw != null && neededHw.value != "")
                                     {
                                         <th class="materials-index-table-col homework-day-table-col" scope="row">
                                         <div class="d-flex justify-content-between">
@@ -158,14 +162,18 @@
                                 </tr>
                                 j++;
                             }
+                            }
+                    </tbody>
+                </table>
+                <table class="table text-white homework-day-table-note">
+                    @{
                             var note = Model.Notes.ToList().Find(x => x.Date == date);
                             var noteString = note != null ?
                                                         $"{note.Id}/../{note.Date.ToShortDateString()}/../{note.Text.Replace("\r\n", "|")}"
                                                         : $"/../{day.ToShortDateString()}";
                             @if((note != null && note.Text.Length > 0) || (User.IsInRole("Moderator") || User.IsInRole("Administrator"))){
                                 <tr class="homework-table-text-note">
-                                    <td width="" class="homework-day-table-col-note">@j</td>
-                                    <th class="materials-index-table-col homework-day-table-col-note" scope="row">Заметка</th>
+                                    <th class="materials-index-table-col homework-day-table-col-note homework-day-table-col-note-text" scope="row">Заметка</th>
                                     @if (note != null)
                                     {
                                         <th class="materials-index-table-col homework-day-table-col-note" scope="row">
@@ -177,7 +185,7 @@
                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                                         </svg>
                                         </button>
-                                        @if(User.Identity != null && (User.IsInRole("Moderator") || User.IsInRole("Administrator")) && (DateTime.Now <= day.AddDays(1) || User.IsInRole("Administrator")))
+                                        @if(User.Identity != null && (User.IsInRole("Moderator") || User.IsInRole("Administrator")))
                                                 {
                                                 <button type="button" class="btn btn-outline-warning p-2 m-1 btn-homework" onclick="openModalNote({ url: '/Homework/EditNote', data: '@noteString'})" data-toggle="ajax-modal" data-target="Modal">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -196,14 +204,14 @@
                                         <div class="d-flex justify-content-between">
                                         <p class="homework-value"></p>
                                         <div></div>
-                                                @if(User.Identity != null && (User.IsInRole("Moderator") || User.IsInRole("Administrator")) && (DateTime.Now <= day.AddDays(1) || User.IsInRole("Administrator")))
+                                                @if (User.Identity != null && (User.IsInRole("Moderator") || User.IsInRole("Administrator")))
                                                 {
-                                                <button type="button" class="btn btn-outline-warning p-2 m-1 btn-homework"  onclick="openModalNote({ url: '/Homework/EditNote', data: '@noteString'})" data-toggle="ajax-modal" data-target="Modal">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                                                </svg>
-                                                </button>
+                                                    <button type="button" class="btn btn-outline-warning p-2 m-1 btn-homework"  onclick="openModalNote({ url: '/Homework/EditNote', data: '@noteString'})" data-toggle="ajax-modal" data-target="Modal">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                                    </svg>
+                                                    </button>
                                                 }
                                         </div>
                                         </th>
@@ -211,7 +219,6 @@
                                 </tr>
                             }
                         }
-                    </tbody>
                 </table>
             </div>
             }
@@ -329,38 +336,10 @@
 
         });
         
-       $('#compareBtnId').on('click', function (){
-           $.ajax({
-               type: 'GET',
-               url : '@Url.Action("Compare")',
-               success: function (response) {
-                   $('.modal-dialog').addClass("modal-lg");
-                   modal.find(".modal-body").html(response);
-                   modal.modal('show')
-               }
-           });
-       });
+
         
        $(".btn-close").click(function(){
             modal.modal('hide');
-       });
-       
-       $('#addCarId').on('click', function () {
-           $.ajax({
-              type: 'GET',
-              url : '/Car/Save',
-              success: function (response) {
-                  $('.modal-dialog').removeClass("modal-lg");
-                  modal.find(".modal-body").html(response);
-                  modal.modal('show')
-              },
-              failure: function () {
-                modal.modal('hide')
-              },
-              error: function (response) {
-                  alert(response.responseText);
-              }
-          });
        });
        
     </script>

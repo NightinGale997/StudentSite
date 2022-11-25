@@ -1,0 +1,39 @@
+﻿@model StudentSite.Entities.User;
+@*data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())*@
+
+<div class="modal-header">
+    <h5 class="modal-title">Информация</h5>
+</div>
+<form method="post" class="modal-window" asp-action="EditUser" asp-controller="AdminPanel"  enctype="multipart/form-data">
+<div class="modal-body">
+    <div class="modal-window">
+        <div class="modal-window">
+            <label asp-for="@Model.Id" class="col-form-label">ID</label>
+            <input type="text" class="form-control w-100" asp-for="@Model.Id" readonly/>
+        </div>
+        <div class="modal-window">
+            <label asp-for="@Model.Name" class="col-form-label">Логин</label>
+            <input type="text" class="form-control w-100" asp-for="@Model.Name"  value="@Model.Name" />
+        </div>
+        <div class="modal-window">
+            <label asp-for="@Model.Password" class="col-form-label">Новый пароль</label>
+            <input type="text" class="form-control w-100" asp-for="@Model.Password" value="" />
+        </div>
+        <div class="modal-window">
+            <label asp-for="@Model.Role" class="col-form-label">Роль</label>
+            <select asp-for="@Model.Role" class="form-select" id="exampleSelect1">
+                <option value="0">User</option>
+                <option value="1">Moderator</option>
+                <option value="2">Admin</option>
+            </select>
+        </div>
+    </div>
+</div>
+    <div class="modal-footer d-flex justify-content-between">
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            <button class="btn btn-primary" id="saveBtn">Сохранить</button>
+        }
+        <button type="button" class="btn btn-close btn-secondary" data-bs-dismiss="modal"></button>
+    </div>
+</form>

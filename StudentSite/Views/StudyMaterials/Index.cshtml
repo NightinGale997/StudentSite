@@ -51,9 +51,8 @@
                 @{
                     var materials = (from sm in Model.StudyMaterials select sm.Category).ToList<String>();
                     materials.Sort();
-                    materials.Distinct<String>();
                 }
-                @foreach(var s in materials)
+                @foreach (var s in materials.Distinct<String>())
                 {
                     if(s == Model.SelectedCategory)
                     {

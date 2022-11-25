@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentSite.Data;
+using StudentSite.Entities;
 using StudentSite.Enum;
 using StudentSite.Models;
 
@@ -15,7 +16,7 @@ namespace StudentSite.Controllers
         {
             _appEnvironment = appEnvironment;
             _db = db;
-        } 
+        }
         public IActionResult Index()
         {
             var semesters = _db.Semesters.ToList();

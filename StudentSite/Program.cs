@@ -19,6 +19,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
         options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60 * 24 * 365 * 10);
+        options.Cookie.MaxAge = options.ExpireTimeSpan; // optional
     });
 
 var app = builder.Build();

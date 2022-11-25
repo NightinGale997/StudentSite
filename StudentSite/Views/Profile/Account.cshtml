@@ -9,10 +9,16 @@
     @{
         var user = Model.Users.ToList().Find(x => x.Name == User.Identity?.Name);
         string name = user.Name;
-        string[] words = Regex.Matches(name, "(^[a-z]+|[A-Z]+(?![a-z])|[A-Z][a-z]+)")
+        string[] words = Regex.Matches(name, "(^[а-я]+|[А-Я]+(?![а-я])|[А-Я][а-я]+)")
         .OfType<Match>()
         .Select(m => m.Value)
         .ToArray();
+        if(words.Length == 0) {
+            words = Regex.Matches(name, "(^[a-z]+|[A-Z]+(?![a-z])|[A-Z][a-z]+)")
+        .OfType<Match>()
+        .Select(m => m.Value)
+        .ToArray();
+        }
         string result = string.Join(" ", words);
         int allPoints = 0;
         int allPointsMonth = 0;
@@ -29,9 +35,17 @@
         <h3 class="m-3">Количество очков всего: @allPoints</h3>
         <h3 class="m-3">Количество очков в этом месяце: @allPointsMonth</h3>
         <div class="m-3">
+            @{string newPassword = "";}
+            <form method="post" asp-controller="Profile" asp-action="ChangePassword">
+                <label asp-for="@newPassword" class="col-form-label">Новый пароль</label>
+                <input type="text" class="form-control w-25" asp-for="@newPassword" value="" />
+                <input class="btn btn-primary mt-2" type="submit" value="Сменить пароль" />
+             </form>
+        </div>
+        <div class="m-3">
             <form method="post" asp-controller="Profile" asp-action="Logout">
-                <input class="btn btn-danger" type="submit" value="Выйти" />
-                </form>
+                <input class="btn btn-danger mt-5" type="submit" value="Выйти" />
+             </form>
         </div>
     </div>
 </div>
