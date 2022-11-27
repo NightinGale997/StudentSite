@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using StudentSite.Data;
 
@@ -19,9 +21,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
         options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(60 * 24 * 365 * 10);
+        options.ExpireTimeSpan = TimeSpan.FromDays(365 * 10);
         options.Cookie.MaxAge = options.ExpireTimeSpan; // optional
     });
+builder.Services.AddDataProtection()
+                .PersistKeysToFileSystem(new System.IO.DirectoryInfo("SOME WHERE IN STORAGE"))
+                //.ProtectKeysWithCertificate(new X509Certificate2());
+                .SetDefaultKeyLifetime(TimeSpan.FromDays(365 * 10));
+
 
 var app = builder.Build();
 

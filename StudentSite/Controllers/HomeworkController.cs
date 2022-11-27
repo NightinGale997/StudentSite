@@ -31,7 +31,7 @@ namespace StudentSite.Controllers
             data.CurrentSemester = semesters.Find(s => s.DateStart < DateTime.Now && s.DateEnd > DateTime.Now).SemesterNumber;
             data.CurrentParity = ((int)(DateTime.Now - semesters[data.CurrentSemester - 1].NumeratorStart).TotalDays / 7) % 2 == 1 ? 1 : 0;
             var daysFromSemesterStart = (int)(DateTime.Now - semesters[data.CurrentSemester - 1].DateStart).TotalDays;
-            data.CurrentWeek = daysFromSemesterStart / 7 + 1;
+            data.CurrentWeek = DateTime.Now.DayOfWeek == DayOfWeek.Sunday ? daysFromSemesterStart / 7 + 2 : daysFromSemesterStart / 7 + 1;
 
             for (int i = 0; i < semesters.Count; i++)
             {

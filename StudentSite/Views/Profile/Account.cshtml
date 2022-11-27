@@ -38,13 +38,13 @@
             @{string newPassword = "";}
             <form method="post" asp-controller="Profile" asp-action="ChangePassword">
                 <label asp-for="@newPassword" class="col-form-label">Новый пароль</label>
-                <input type="text" class="form-control w-25" asp-for="@newPassword" value="" />
-                <input class="btn btn-primary mt-2" type="submit" value="Сменить пароль" />
-             </form>
+                <input type="text" class="form-control newpassword-field" asp-for="@newPassword" value="" />
+                <input class="btn btn-outline-primary mt-2" type="submit" value="Сменить пароль" />
+            </form>
         </div>
         <div class="m-3">
             <form method="post" asp-controller="Profile" asp-action="Logout">
-                <input class="btn btn-danger mt-5" type="submit" value="Выйти" />
+                <input class="btn btn-outline-danger mt-5" type="submit" value="Выйти" />
              </form>
         </div>
     </div>

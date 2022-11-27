@@ -23,7 +23,10 @@ namespace StudentSite.Controllers
 
         public IActionResult Index()
         {
-            return View(_usersData);
+            if (User.IsInRole("Administrator"))
+                return View(_usersData);
+            else
+                return RedirectToAction("Index", "Home");
         }
         public IActionResult EditUser(string userString)
         {
