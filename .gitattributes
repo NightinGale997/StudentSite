@@ -2,7 +2,7 @@
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
 * text=auto
-StudentSite/wwwroot/lib/bootstrap/dist/css/* linguist-vendored
+*.css linguist-detectable=false
 ###############################################################################
 # Set default behavior for command prompt diff.
 #
